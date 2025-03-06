@@ -1,24 +1,77 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+// -- H / A - L3 - 1
+//
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const myIterable = { from: -1, to: 5 };
+myIterable[Symbol.iterator] = function () {
+  let count = this.from;
 
-setupCounter(document.querySelector('#counter'))
+  let isDone = false;
+
+  const next = () => {
+    if (typeof this.from !== "number" || typeof this.to !== "number") {
+      throw new Error("Error! Object is not iterable");
+    }
+
+    if (this.from > this.to) {
+      throw new Error("Error! 'from' is greater than 'to'");
+    }
+
+    if (count > this.to) {
+      isDone = true;
+    }
+
+    return { done: isDone, value: count++ };
+  };
+  return { next };
+};
+// for testing
+for (const item of myIterable) {
+  console.log(item);
+}
+
+//
+// -- H / A - L3 - 2
+//
+function getPersons(name, age) {
+  class Person {
+    constructor(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+  }
+
+  function PersonFn(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  return [
+    { name, age },
+    Object.assign({}, { name, age }),
+    Object.create(
+      {},
+      {
+        name: {
+          enumerable: true,
+          writable: true,
+          configurable: false,
+          value: name,
+        },
+        age: {
+          enumerable: true,
+          writable: true,
+          configurable: false,
+          value: age,
+        },
+      }
+    ),
+    new Person(name, age),
+    new PersonFn(name, age),
+  ];
+}
+// for testing
+const persons = getPersons("Michael Keaton", 73);
+
+for (const person of persons) {
+  console.log(`${person.name} ${person.age}`);
+}
