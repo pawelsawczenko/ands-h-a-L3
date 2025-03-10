@@ -3,19 +3,17 @@
 
 const myIterable = { from: -1, to: 5 };
 myIterable[Symbol.iterator] = function () {
+  if (typeof this.from !== "number" || typeof this.to !== "number")
+    throw new Error("Error! Object is not iterable");
+
+  if (this.from > this.to)
+    throw new Error("Error! 'from' is greater than 'to'");
+
   let count = this.from;
 
   let isDone = false;
 
   const next = () => {
-    if (typeof this.from !== "number" || typeof this.to !== "number") {
-      throw new Error("Error! Object is not iterable");
-    }
-
-    if (this.from > this.to) {
-      throw new Error("Error! 'from' is greater than 'to'");
-    }
-
     if (count > this.to) {
       isDone = true;
     }
